@@ -1,0 +1,41 @@
+﻿@page "/"
+@using TodoList.Models
+
+<PageTitle>Todo</PageTitle>
+
+<h1>Todo (@_todos.Count(todo => !todo.IsDone))</h1>
+
+<ul>
+    @foreach (var todo in _todos)
+    {
+        <li>
+            <input type="checkbox" @bind="todo.IsDone" id="item" />
+            <label for="item" class="strikethrough">@todo.Title</label>
+        </li>
+    }
+</ul>
+<form @onsubmit="@Enter">
+    <input placeholder="Something todo" @bind="_newTodo" />
+    <button>Add todo</button>
+</form>
+
+
+@code {
+    private string? _newTodo;
+    private readonly List<TodoItem> _todos = new();
+
+    private void Enter()
+    {
+        AddItem();
+    }
+
+    private void AddItem()
+    {
+        if (string.IsNullOrWhiteSpace(_newTodo))
+        {
+            return;
+        }
+        _todos.Add(new TodoItem(_newTodo));
+        _newTodo = string.Empty;
+    }
+}
